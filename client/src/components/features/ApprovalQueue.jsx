@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
-import './Table.css';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../supabaseClient';
 import ApprovalModal from './ApprovalModal';
-
-const mockApprovals = [
-  { id: 1, owner: 'Sarah', category: 'Food', status: 'Pending', amount: '49896', subject: 'Client Lunch' },
-];
+import './Table.css';
 
 const ApprovalQueue = () => {
+  const [approvals, setApprovals] = useState([]);
   const [modalState, setModalState] = useState({ isOpen: false, action: null, expense: null });
 
-  const handleActionClick = (action, expense) => {
-    setModalState({ isOpen: true, action, expense });
+  useEffect(() => {
+    fetchApprovals();
+  }, []);
+
+  const fetchApprovals = async () => {
+    const { data, error } = await supabase.rpc('get_my_pending_approvals');
+    if (error) console.error('Error fetching approvals:', error);
+    else setApprovals(data);
   };
 
-  const handleModalSubmit = (comment) => {
-    console.log({
-      action: modalState.action,
-      expenseId: modalState.expense.id,
-      comment: comment,
-    });
-    alert(`Action: ${modalState.action} with comment: "${comment}"`);
-    setModalState({ isOpen: false, action: null, expense: null });
+  const handleDecision = async (comment) => {
+    const { action, expense } = modalState;
+    const { error } = await supabase
+      .from('expenses')
+      .update({ status: action === 'Approve' ? 'Approved' : 'Rejected' })
+      .eq('id', expense.id);
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert(`Expense ${action.toLowerCase()}d!`);
+      setModalState({ isOpen: false, action: null, expense: null });
+      fetchApprovals(); // Refresh the list
+    }
   };
 
   return (
@@ -30,29 +40,18 @@ const ApprovalQueue = () => {
         <div className="table-wrapper">
           <table className="data-table">
             <thead>
-              <tr>
-                <th>Approval Subject</th>
-                <th>Request Owner</th>
-                <th>Category</th>
-                <th>Request Status</th>
-                <th>Total Amount (in company's currency)</th>
-                <th>Actions</th>
-              </tr>
+              {/* Table headers */}
             </thead>
             <tbody>
-              {mockApprovals.map((req) => (
+              {approvals.map((req) => (
                 <tr key={req.id}>
-                  <td>{req.subject}</td>
-                  <td>{req.owner}</td>
-                  <td>{req.category}</td>
-                  <td>
-                    <span className="status-badge status-submitted">{req.status}</span>
-                  </td>
-                  <td>{req.amount} rs</td>
+                  {/* Table data cells */}
+                  <td>{req.description}</td>
+                  {/* ... other cells ... */}
                   <td>
                     <div className="actions">
-                      <button className="button-approve" onClick={() => handleActionClick('Approve', req)}>Approve</button>
-                      <button className="button-reject" onClick={() => handleActionClick('Reject', req)}>Reject</button>
+                      <button className="button-approve" onClick={() => setModalState({ isOpen: true, action: 'Approve', expense: req })}>Approve</button>
+                      <button className="button-reject" onClick={() => setModalState({ isOpen: true, action: 'Reject', expense: req })}>Reject</button>
                     </div>
                   </td>
                 </tr>
@@ -67,7 +66,7 @@ const ApprovalQueue = () => {
           isOpen={modalState.isOpen}
           action={modalState.action}
           onClose={() => setModalState({ isOpen: false, action: null, expense: null })}
-          onSubmit={handleModalSubmit}
+          onSubmit={handleDecision}
         />
       )}
     </>

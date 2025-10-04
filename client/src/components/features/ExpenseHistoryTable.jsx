@@ -1,12 +1,28 @@
-import React from 'react';
-import './Table.css'; 
-
-const mockExpenses = [
-  { id: 1, description: 'Restaurant bill', date: '4th Oct, 2025', category: 'Food', amount: '5000 rs', status: 'Approved' },
-  { id: 2, description: 'Flight to Delhi', date: '2nd Oct, 2025', category: 'Travel', amount: '12000 rs', status: 'Submitted' },
-];
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../supabaseClient';
+import { useAuth } from '../../context/AuthContext';
+import './Table.css';
 
 const ExpenseHistoryTable = ({ onNewExpenseClick }) => {
+  const [expenses, setExpenses] = useState([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      if (!user) return;
+      const { data, error } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('submitter_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) console.error('Error fetching expenses:', error);
+      else setExpenses(data);
+    };
+
+    fetchExpenses();
+  }, [user]); // Re-fetch if the user changes
+
   return (
     <div className="card">
       <div className="card-header-action">
@@ -27,10 +43,10 @@ const ExpenseHistoryTable = ({ onNewExpenseClick }) => {
             </tr>
           </thead>
           <tbody>
-            {mockExpenses.map((exp) => (
+            {expenses.map((exp) => (
               <tr key={exp.id}>
                 <td>{exp.description}</td>
-                <td>{exp.date}</td>
+                <td>{exp.expense_date}</td>
                 <td>{exp.category}</td>
                 <td>{exp.amount}</td>
                 <td>

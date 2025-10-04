@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../supabaseClient'; // <-- 1. Import Supabase
 import './Signup.css';
 
 const Signup = () => {
@@ -12,7 +13,6 @@ const Signup = () => {
   const [countries, setCountries] = useState([]);
   const [message, setMessage] = useState('');
 
-  // Fetch countries when the component mounts
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -26,17 +26,35 @@ const Signup = () => {
       }
     };
     fetchCountries();
-  }, []); // The empty array means this effect runs only once
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  // --- 2. REPLACE THIS ENTIRE FUNCTION ---
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Add Supabase signup logic here
-    console.log('Signup attempt:', formData);
-    setMessage({ type: 'success', text: 'Account created! Please log in.' });
+    try {
+      // This is the actual Supabase command to create a new user
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          // You can pass extra data here for your trigger to use
+          data: {
+            full_name: formData.companyName, // Assuming company name is the user's name
+          }
+        }
+      });
+      
+      if (error) throw error;
+      
+      setMessage({ type: 'success', text: 'Account created successfully! You can now log in.' });
+
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message });
+    }
   };
 
   return (

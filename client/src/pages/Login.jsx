@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../supabaseClient'; // <-- ADD THIS LINE
 import './Login.css';
 
 const Login = () => {
@@ -7,14 +8,18 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Add Supabase login logic here
-    console.log('Login attempt:', { email, password });
-    setMessage({ type: 'success', text: 'Login successful! Redirecting...' });
-    setTimeout(() => {
-        alert('Redirecting to dashboard (placeholder).');
-    }, 1500);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      if (error) throw error;
+      // The onAuthStateChange listener in AuthContext will handle the redirect
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message });
+    }
   };
 
   return (

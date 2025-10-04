@@ -12,11 +12,27 @@ const ExpenseForm = ({ onClose }) => {
   // 2. Create a ref for the hidden file input
   const fileInputRef = useRef(null);
 
-  const onSubmit = (data) => {
-    // TODO: Include the uploaded file path in your submission data
-    console.log(data);
-    alert('Expense submitted!');
-    onClose();
+  const onSubmit = async (data) => {
+    if (!user) {
+        alert('You must be logged in to submit an expense.');
+        return;
+    }
+    try {
+        const { error } = await supabase.from('expenses').insert([{ 
+            submitter_id: user.id,
+            // company_id should ideally come from the user's profile
+            description: data.description,
+            amount: data.amount,
+            category: data.category,
+            expense_date: data.expenseDate,
+            status: 'Submitted'
+        }]);
+        if (error) throw error;
+        alert('Expense submitted successfully!');
+        onClose();
+    } catch (error) {
+        alert(error.message);
+    }
   };
 
   // 3. This function is called when the visible "Attach Receipt" button is clicked

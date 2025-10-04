@@ -12,12 +12,22 @@ const AdminUserForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const onSubmit = (data) => {
-    // TODO: Supabase logic to create a new user
-    console.log(data);
-    alert(`User ${data.name} created!`);
-    reset();
-    setIsModalOpen(false);
+const onSubmit = async (data) => {
+    try {
+      const { error } = await supabase.functions.invoke('invite-user', {
+        body: { 
+          email: data.email, 
+          role: data.role, 
+          manager_id: data.managerId 
+        },
+      });
+      if (error) throw error;
+      alert(`Invitation sent to ${data.email}`);
+      reset();
+      setIsModalOpen(false);
+    } catch (error) {
+        alert(error.message);
+    }
   };
 
   return (
