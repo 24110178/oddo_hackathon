@@ -1,0 +1,4 @@
+/* Since the signup form has the exact same structure and style as the login form,
+   we can just import the login styles to keep our code DRY (Don't Repeat Yourself). */
+
+@import url('./Login.css');
