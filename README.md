@@ -1,4 +1,4 @@
-# oddo_hackathon
+# odoo_hackathon
 # 💰 Expense Management System  
 
 ## 📌 Overview  
