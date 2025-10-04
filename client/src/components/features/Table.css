@@ -1,0 +1,58 @@
+/* Shared Card Header style with actions */
+.card-header-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.card-header-action .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+.button-primary {
+    background-color: #4a90e2; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;
+}
+.button-secondary {
+    background-color: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;
+}
+
+/* Shared Table Styles */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.data-table th, .data-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+.data-table thead {
+    background-color: #f8f9fa;
+}
+.data-table th {
+    font-weight: bold;
+    color: #4a5568;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+}
+.status-approved { background-color: #28a745; }
+.status-submitted { background-color: #fd7e14; }
+.status-draft { background-color: #6c757d; }
+.status-rejected { background-color: #dc3545; }
+.button-approve {
+    background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;
+}
+.button-reject {
+    background-color: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;
+}

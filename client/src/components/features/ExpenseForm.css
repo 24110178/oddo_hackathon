@@ -1,0 +1,53 @@
+/* Basic Card styles for container */
+.card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+}
+.card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Specific Styles */
+.expense-form .form-group {
+    margin-bottom: 1rem;
+}
+.expense-form .form-row {
+    display: flex;
+    gap: 1rem;
+}
+.expense-form .form-group, .expense-form .form-row .form-group {
+    flex: 1;
+}
+.expense-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.expense-form input, .expense-form select, .expense-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+.expense-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+.expense-form .submit-btn {
+    display: block;
+    width: auto;
+    margin-left: auto;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
