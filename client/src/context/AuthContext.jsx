@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
     // To see the Employee dashboard:
     const [user, setUser] = useState({ id: 'mock-employee-id', email: 'employee@example.com' });
-    const [role, setRole] = useState('Manager');
+    const [role, setRole] = useState('Admin');
 
     // To see the Manager dashboard (uncomment these lines and comment out the Employee ones):
     // const [user, setUser] = useState({ id: 'mock-manager-id', email: 'manager@example.com' });

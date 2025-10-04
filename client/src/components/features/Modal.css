@@ -50,3 +50,6 @@
 .modal-content .form-group { margin-bottom: 1rem; }
 .modal-content label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
 .modal-content input, .modal-content select { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; box-sizing: border-box; }
+.modal-content.large {
+    max-width: 800px; /* Make the modal wider for the form */
+}

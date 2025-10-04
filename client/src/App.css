@@ -1,7 +1,6 @@
-.App {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f8f9fa;
+/* This class provides padding and a max-width for the main content area */
+.main-content-dashboard {
+    max-width: 1280px;
+    margin: 0 auto; /* Horizontally centers the content block */
+    padding: 2rem;
 }

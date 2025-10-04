@@ -1,37 +1,87 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { supabase } from '../../supabaseClient'; // Make sure you have this client configured
 import './ExpenseForm.css';
 
-const ExpenseForm = () => {
+const ExpenseForm = ({ onClose }) => {
   const { register, handleSubmit } = useForm();
+  // 1. Add state to track the upload status
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+
+  // 2. Create a ref for the hidden file input
+  const fileInputRef = useRef(null);
 
   const onSubmit = (data) => {
-    // TODO: Supabase logic to submit the expense
+    // TODO: Include the uploaded file path in your submission data
     console.log(data);
     alert('Expense submitted!');
+    onClose();
+  };
+
+  // 3. This function is called when the visible "Attach Receipt" button is clicked
+  const handleAttachClick = () => {
+    fileInputRef.current.click(); // Programmatically click the hidden file input
+  };
+
+  // 4. This function handles the file upload to Supabase
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setUploadStatus('Uploading...');
+
+    try {
+      // Use a unique file path, e.g., user_id/timestamp-filename
+      const filePath = `public/${Date.now()}-${file.name}`;
+      
+      const { error } = await supabase.storage
+        .from('receipts') // The bucket name you created
+        .upload(filePath, file);
+
+      if (error) throw error;
+
+      setUploadStatus(`✅ ${file.name} uploaded successfully!`);
+    } catch (error) {
+      setUploadStatus(`Error: ${error.message}`);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
-    <div className="card">
-      <h2 className="card-header">Submit New Expense</h2>
-      <form className="expense-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <input id="description" placeholder="e.g., Client Dinner" {...register('description')} />
-        </div>
-        <div className="form-row">
+    <form className="expense-form" onSubmit={handleSubmit(onSubmit)}>
+      <div className="form-action-top">
+        {/* 5. The button now triggers our click handler */}
+        <button type="button" className="attach-receipt-btn" onClick={handleAttachClick} disabled={isUploading}>
+          {isUploading ? 'Uploading...' : 'Attach Receipt'}
+        </button>
+        {/* Hidden file input */}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleFileChange}
+          style={{ display: 'none' }} 
+        />
+        <p className="status-flow">Draft &gt; Waiting approval &gt; Approved</p>
+      </div>
+      {/* 6. Display the confirmation message */}
+      {uploadStatus && <p className="upload-status">{uploadStatus}</p>}
+      
+      {/* ... rest of your form ... */}
+      <div className="form-group">
+        <label htmlFor="description">Description</label>
+        <input id="description" placeholder="e.g., Client Dinner" {...register('description')} />
+      </div>
+      <div className="form-row">
           <div className="form-group">
             <label htmlFor="expenseDate">Expense Date</label>
             <input id="expenseDate" type="date" {...register('expenseDate')} />
           </div>
           <div className="form-group">
             <label htmlFor="category">Category</label>
-            <select id="category" {...register('category')}>
-              <option value="">Select category...</option>
-              <option value="food">Food</option>
-              <option value="travel">Travel</option>
-              <option value="supplies">Office Supplies</option>
-            </select>
+            <select id="category" {...register('category')}><option value="food">Food</option></select>
           </div>
         </div>
         <div className="form-row">
@@ -44,13 +94,19 @@ const ExpenseForm = () => {
             <input id="paidBy" placeholder="Your Name" {...register('paidBy')} />
           </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="remarks">Remarks</label>
-          <textarea id="remarks" placeholder="Any additional notes..." {...register('remarks')}></textarea>
+        <div className="approval-log">
+            <h4>Approval History</h4>
+            <div className="log-item">
+                <span>Sarah</span>
+                <span>Approved</span>
+                <span>12:44 4th Oct, 2025</span>
+            </div>
         </div>
-        <button type="submit" className="submit-btn">Submit</button>
-      </form>
-    </div>
+        <div className="form-footer">
+            <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
+            <button type="submit" className="submit-btn">Submit</button>
+        </div>
+    </form>
   );
 };
 

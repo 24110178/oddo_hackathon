@@ -43,11 +43,38 @@
 .expense-form .submit-btn {
     display: block;
     width: auto;
-    margin-left: auto;
     background-color: #4a90e2;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 4px;
     cursor: pointer;
+}
+.cancel-btn {
+    display: block;
+    width: auto;
+    background-color: #6c757d; /* Secondary gray color */
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+.form-footer {
+    margin-top: 1.5rem;
+    display: flex; /* Use flexbox */
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 0.5rem; /* Add space between buttons */
+}
+/* Add this to your existing ExpenseForm.css */
+.upload-status {
+    text-align: center;
+    padding: 0.5rem;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #155724; /* Green for success */
 }
