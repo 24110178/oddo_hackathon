@@ -1,49 +1,47 @@
 import React from 'react';
-import './Table.css'; // Using a shared CSS for tables
+import './Table.css'; // Assuming you have this shared CSS
 
+// Re-using mock data from previous example
 const mockExpenses = [
   { id: 1, description: 'Restaurant bill', date: '4th Oct, 2025', category: 'Food', amount: '5000 rs', status: 'Approved' },
   { id: 2, description: 'Flight to Delhi', date: '2nd Oct, 2025', category: 'Travel', amount: '12000 rs', status: 'Submitted' },
-  { id: 3, description: 'Team Lunch', date: '1st Oct, 2025', category: 'Food', amount: '3500 rs', status: 'Draft' },
 ];
 
-const ExpenseHistoryTable = () => {
-  // TODO: Fetch real expense history from Supabase
+const ExpenseHistoryTable = ({ onNewExpenseClick }) => {
   return (
     <div className="card">
-        <div className="card-header-action">
-            <h2 className="card-header">My Expenses</h2>
-            <div className="actions">
-                <button className="button-secondary">Upload Receipt (OCR)</button>
-                <button className="button-primary">New Expense</button>
-            </div>
-        </div>
-        <div className="table-wrapper">
-            <table className="data-table">
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {mockExpenses.map((exp) => (
-                    <tr key={exp.id}>
-                        <td>{exp.description}</td>
-                        <td>{exp.date}</td>
-                        <td>{exp.category}</td>
-                        <td>{exp.amount}</td>
-                        <td>
-                            <span className={`status-badge status-${exp.status.toLowerCase()}`}>{exp.status}</span>
-                        </td>
-                    </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+      <div className="card-header-action">
+        <h2 className="card-header">My Expenses</h2>
+        <button className="button-primary" onClick={onNewExpenseClick}>
+          New Expense
+        </button>
+      </div>
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mockExpenses.map((exp) => (
+              <tr key={exp.id}>
+                <td>{exp.description}</td>
+                <td>{exp.date}</td>
+                <td>{exp.category}</td>
+                <td>{exp.amount}</td>
+                <td>
+                  <span className={`status-badge status-${exp.status.toLowerCase()}`}>{exp.status}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

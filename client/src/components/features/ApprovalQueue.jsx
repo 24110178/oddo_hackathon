@@ -1,44 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Table.css';
+import ApprovalModal from './ApprovalModal'; // New modal component
 
 const mockApprovals = [
-  { id: 1, owner: 'Sarah', category: 'Food', amount: '5000' },
-  { id: 2, owner: 'John', category: 'Travel', amount: '12000' },
+  { id: 1, owner: 'Sarah', category: 'Food', amount: '49896', subject: 'Client Lunch' },
 ];
 
 const ApprovalQueue = () => {
-  // TODO: Fetch approvals from Supabase
+  const [modalState, setModalState] = useState({ isOpen: false, action: null, expense: null });
+
+  const handleActionClick = (action, expense) => {
+    setModalState({ isOpen: true, action, expense });
+  };
+
+  const handleModalSubmit = (comment) => {
+    console.log({
+      action: modalState.action,
+      expenseId: modalState.expense.id,
+      comment: comment,
+    });
+    alert(`Action: ${modalState.action} with comment: "${comment}"`);
+    setModalState({ isOpen: false, action: null, expense: null });
+  };
+
   return (
-    <div className="card">
-      <h2 className="card-header">Approvals to Review</h2>
-      <div className="table-wrapper">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Request Owner</th>
-              <th>Category</th>
-              <th>Amount (in company currency)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockApprovals.map((req) => (
-              <tr key={req.id}>
-                <td>{req.owner}</td>
-                <td>{req.category}</td>
-                <td>{req.amount} rs</td>
-                <td>
-                  <div className="actions">
-                    <button className="button-approve">Approve</button>
-                    <button className="button-reject">Reject</button>
-                  </div>
-                </td>
+    <>
+      <div className="card">
+        <h2 className="card-header">Approvals to Review</h2>
+        <div className="table-wrapper">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Approval Subject</th>
+                <th>Request Owner</th>
+                <th>Category</th>
+                <th>Amount (in company currency)</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {mockApprovals.map((req) => (
+                <tr key={req.id}>
+                  <td>{req.subject}</td>
+                  <td>{req.owner}</td>
+                  <td>{req.category}</td>
+                  <td>{req.amount} rs</td>
+                  <td>
+                    <div className="actions">
+                      <button className="button-approve" onClick={() => handleActionClick('Approve', req)}>Approve</button>
+                      <button className="button-reject" onClick={() => handleActionClick('Reject', req)}>Reject</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+      
+      {modalState.isOpen && (
+        <ApprovalModal 
+          isOpen={modalState.isOpen}
+          action={modalState.action}
+          onClose={() => setModalState({ isOpen: false, action: null, expense: null })}
+          onSubmit={handleModalSubmit}
+        />
+      )}
+    </>
   );
 };
 

@@ -1,0 +1,49 @@
+.approval-rules-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.approval-rules-form .form-group label, .approvers-section .section-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.approval-rules-form .form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.approval-rules-form .form-checkbox label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+.approvers-section {
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.approver-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.approver-row input[type="text"] {
+    flex-grow: 1;
+}
+.approver-row .form-checkbox.small label {
+    font-size: 0.9rem;
+}
+.remove-btn, .add-btn {
+    background: none;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0.25rem 0.75rem;
+}
+.add-btn {
+    align-self: flex-start;
+    border-style: dashed;
+}

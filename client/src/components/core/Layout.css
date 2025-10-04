@@ -1,5 +1,18 @@
-.layout-content {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
+/* Update Layout.css, not a new file */
+.app-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-body {
+    display: flex;
+    margin-top: 64px; /* Height of Navbar */
+}
+
+.main-content {
+    flex-grow: 1;
+    padding-left: 250px; /* Width of Sidebar */
+    padding-top: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 2rem;
 }

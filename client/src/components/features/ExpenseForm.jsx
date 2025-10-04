@@ -2,23 +2,27 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import './ExpenseForm.css';
 
-const ExpenseForm = () => {
+const ExpenseForm = ({ onClose }) => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    // TODO: Supabase logic to submit the expense
     console.log(data);
     alert('Expense submitted!');
+    onClose(); // Close the modal
   };
 
   return (
-    <div className="card">
-      <h2 className="card-header">Submit New Expense</h2>
-      <form className="expense-form" onSubmit={handleSubmit(onSubmit)}>
+    <form className="expense-form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-action-top">
+            <button type="button" className="attach-receipt-btn">Attach Receipt</button>
+            <p className="status-flow">Draft &gt; Waiting approval &gt; Approved</p>
+        </div>
+        
         <div className="form-group">
           <label htmlFor="description">Description</label>
           <input id="description" placeholder="e.g., Client Dinner" {...register('description')} />
         </div>
+        
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="expenseDate">Expense Date</label>
@@ -26,14 +30,10 @@ const ExpenseForm = () => {
           </div>
           <div className="form-group">
             <label htmlFor="category">Category</label>
-            <select id="category" {...register('category')}>
-              <option value="">Select category...</option>
-              <option value="food">Food</option>
-              <option value="travel">Travel</option>
-              <option value="supplies">Office Supplies</option>
-            </select>
+            <select id="category" {...register('category')}><option value="food">Food</option></select>
           </div>
         </div>
+        
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="amount">Total Amount</label>
@@ -44,13 +44,20 @@ const ExpenseForm = () => {
             <input id="paidBy" placeholder="Your Name" {...register('paidBy')} />
           </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="remarks">Remarks</label>
-          <textarea id="remarks" placeholder="Any additional notes..." {...register('remarks')}></textarea>
+        
+        <div className="approval-log">
+            <h4>Approval History</h4>
+            <div className="log-item">
+                <span>Sarah</span>
+                <span>Approved</span>
+                <span>12:44 4th Oct, 2025</span>
+            </div>
         </div>
-        <button type="submit" className="submit-btn">Submit</button>
-      </form>
-    </div>
+
+        <div className="form-footer">
+            <button type="submit" className="submit-btn">Submit</button>
+        </div>
+    </form>
   );
 };
 
